@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Transformer, TransformerType } from './domain/transformer';
 
 export interface BattleResult {
@@ -145,17 +145,62 @@ export class AppComponent implements OnInit {
       9
     ),
   ];
-
   teamAutobot = [...this.autobots];
   teamDecepticons = [...this.decepticons];
-
-
+  customScenario = false;
+  addTransformerForm: FormGroup;
 
   constructor(private fb: FormBuilder) {
+    this.addTransformerForm = this.fb.group({
+      name: this.fb.control(''),
+      type: this.fb.control(null),
+      strength: this.fb.control(null),
+      intelligence: this.fb.control(null),
+      speed: this.fb.control(null),
+      endurance: this.fb.control(null),
+      rank: this.fb.control(null),
+      courage: this.fb.control(null),
+      firepower: this.fb.control(null),
+      skill: this.fb.control(null),
+    });
+  }
+
+  addTransformer(): void {
+    const addTransformerFormValues = this.addTransformerForm.getRawValue();
+    const newTransformer = new Transformer(
+      addTransformerFormValues.name,
+      addTransformerFormValues.type,
+      addTransformerFormValues.strength,
+      addTransformerFormValues.speed,
+      addTransformerFormValues.endurance,
+      addTransformerFormValues.rank,
+      addTransformerFormValues.courage,
+      addTransformerFormValues.firepower,
+      addTransformerFormValues.skill,
+    );
+
+    if (!this.customScenario) {
+      this.customScenario = true;
+      this.autobots = [];
+      this.decepticons = [];
+    }
+
+
+    if (addTransformerFormValues.type === TransformerType.Autobot) {
+      this.autobots.push(newTransformer);
+    }
+
+    if (addTransformerFormValues.type === TransformerType.Desepticons) {
+      this.decepticons.push(newTransformer);
+    }
+
+    this.addTransformerForm.reset();
 
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+  }
 
   courageSuperiority(
     a: Transformer,

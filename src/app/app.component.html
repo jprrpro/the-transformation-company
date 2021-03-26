@@ -78,31 +78,22 @@
     <div class="row py-5 g-5">
       <div class="col">
         <h4 class="text-center">Add transformers manually</h4>
-        <!-- name: string,
-    type: TransformerType = TransformerType.Autobot,
-    strength?: number,
-    intelligence?: number,
-    speed?: number,
-    endurance?: number,
-    rank?: number,
-    courage?: number,
-    firepower?: number,
-    skill?: number -->
-        <form>
-          <input class="form-control" type="text" placeholder="Transformer name">
-          <select class="form-select">
-            <option selected>Transformer Type</option>
+        <p>Note: if you use this functionality will have to add the entire scenario manually.</p>
+        <form [formGroup]="addTransformerForm" (ngSubmit)="addTransformer()">
+          <input class="form-control" type="text" placeholder="Transformer name" formControlName="name">
+          <select class="form-select" formControlName="type">
+            <option selected value="null">Transformer Type</option>
             <option value="A">Autobot</option>
             <option value="D">Decepticon</option>
           </select>
-          <input class="form-control" type="number" min="0" max="10" placeholder="strength: 0-10">
-          <input class="form-control" type="number" min="0" max="10" placeholder="intelligence: 0-10">
-          <input class="form-control" type="number" min="0" max="10" placeholder="speed: 0-10">
-          <input class="form-control" type="number" min="0" max="10" placeholder="endurance: 0-10">
-          <input class="form-control" type="number" min="0" max="10" placeholder="rank: 0-10">
-          <input class="form-control" type="number" min="0" max="10" placeholder="courage: 0-10">
-          <input class="form-control" type="number" min="0" max="10" placeholder="firepower: 0-10">
-          <input class="form-control" type="number" min="0" max="10" placeholder="skill: 0-10">
+          <input class="form-control" type="number" min="0" max="10" placeholder="strength: 0-10" formControlName="strength">
+          <input class="form-control" type="number" min="0" max="10" placeholder="intelligence: 0-10" formControlName="intelligence">
+          <input class="form-control" type="number" min="0" max="10" placeholder="speed: 0-10" formControlName="speed">
+          <input class="form-control" type="number" min="0" max="10" placeholder="endurance: 0-10" formControlName="endurance">
+          <input class="form-control" type="number" min="0" max="10" placeholder="rank: 0-10" formControlName="rank">
+          <input class="form-control" type="number" min="0" max="10" placeholder="courage: 0-10" formControlName="courage">
+          <input class="form-control" type="number" min="0" max="10" placeholder="firepower: 0-10" formControlName="firepower">
+          <input class="form-control" type="number" min="0" max="10" placeholder="skill: 0-10" formControlName="skill">
           <div class="d-grid gap-2 mt-3">
             <button class="btn btn-success" type="submit">Add</button>
           </div>
