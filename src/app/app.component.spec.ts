@@ -1,4 +1,5 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent, BattleResult } from './app.component';
 import { TransformerType } from './domain/transformer';
@@ -6,7 +7,10 @@ import { TransformerType } from './domain/transformer';
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
+      imports: [
+        ReactiveFormsModule,
+        RouterTestingModule
+      ],
       declarations: [AppComponent],
     }).compileComponents();
   });
@@ -78,11 +82,4 @@ describe('AppComponent', () => {
   //   expect(app.fight).toHaveBeenCalled();
 
   // }));
-
-  // it('should render title', () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   fixture.detectChanges();
-  //   const compiled = fixture.nativeElement;
-  //   expect(compiled.querySelector('.content span').textContent).toContain('TheTransformationCompany app is running!');
-  // });
 });
