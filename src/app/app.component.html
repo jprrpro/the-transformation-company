@@ -2,10 +2,13 @@
   <main>
     <div class="py-5 text-center">
       <h2>The Transformation Company</h2>
-      <!-- <p class="lead">Battles: {{battles}}</p> -->
+      <p class="lead">The “Overall Rating” of a Transformer is the following formula:
+        Strength + Intelligence + Speed + Endurance + Firepower
+      </p>
     </div>
 
     <div class="alert alert-success" role="alert" *ngIf="results.winner">
+      <h4 class="text-center">Result</h4>
       <b>Battles: </b> {{results.battles}} <br>
       <b>Winner:</b>
       <div *ngIf="results.winner === TransformerType.Autobot; else otherWinningTeam">
@@ -28,7 +31,6 @@
         <div *ngIf="results.winner !== TransformerType.Autobot; else otherLoosingTeam">
           Autobots
         </div>
-
         <ng-template #otherLoosingTeam>
           Desepticons
         </ng-template>
@@ -44,14 +46,15 @@
       <div class="col">
         <h4 class="text-center">Autobots</h4>
         <ul class="list-group">
-          <li class="list-group-item" *ngFor="let autobot of autobots">{{autobot.name}} - rank: {{autobot.rank}} -
+          <li class="list-group-item" *ngFor="let autobot of autobots">{{autobot.name | titlecase}} - rank:
+            {{autobot.rank}} -
             overall rating: {{autobot.getOverallRating()}}</li>
         </ul>
       </div>
       <div class="col">
         <h4 class="text-center">Decepticons</h4>
         <ul class="list-group">
-          <li class="list-group-item" *ngFor="let decepticon of decepticons">{{decepticon.name}} - rank:
+          <li class="list-group-item" *ngFor="let decepticon of decepticons">{{decepticon.name | titlecase}} - rank:
             {{decepticon.rank}} - overall rating: {{decepticon.getOverallRating()}}</li>
         </ul>
       </div>
@@ -66,8 +69,45 @@
       </div>
     </div>
 
+
+
     <div class="d-grid gap-2 mt-3" *ngIf="!results.winner">
       <button class="btn btn-success" (click)="fight()" type="button">Fight</button>
+    </div>
+
+    <div class="row py-5 g-5">
+      <div class="col">
+        <h4 class="text-center">Add transformers manually</h4>
+        <!-- name: string,
+    type: TransformerType = TransformerType.Autobot,
+    strength?: number,
+    intelligence?: number,
+    speed?: number,
+    endurance?: number,
+    rank?: number,
+    courage?: number,
+    firepower?: number,
+    skill?: number -->
+        <form>
+          <input class="form-control" type="text" placeholder="Transformer name">
+          <select class="form-select">
+            <option selected>Transformer Type</option>
+            <option value="A">Autobot</option>
+            <option value="D">Decepticon</option>
+          </select>
+          <input class="form-control" type="number" min="0" max="10" placeholder="strength: 0-10">
+          <input class="form-control" type="number" min="0" max="10" placeholder="intelligence: 0-10">
+          <input class="form-control" type="number" min="0" max="10" placeholder="speed: 0-10">
+          <input class="form-control" type="number" min="0" max="10" placeholder="endurance: 0-10">
+          <input class="form-control" type="number" min="0" max="10" placeholder="rank: 0-10">
+          <input class="form-control" type="number" min="0" max="10" placeholder="courage: 0-10">
+          <input class="form-control" type="number" min="0" max="10" placeholder="firepower: 0-10">
+          <input class="form-control" type="number" min="0" max="10" placeholder="skill: 0-10">
+          <div class="d-grid gap-2 mt-3">
+            <button class="btn btn-success" type="submit">Add</button>
+          </div>
+        </form>
+      </div>
     </div>
   </main>
 </div>

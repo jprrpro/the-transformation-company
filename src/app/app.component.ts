@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { Transformer, TransformerType } from './domain/transformer';
 
-interface BattleResult {
+export interface BattleResult {
   battles?: number;
   winner?: string;
   winners?: string[];
@@ -18,10 +19,9 @@ export class AppComponent implements OnInit {
   battles: number = 0;
   results: BattleResult = {};
   logger: string[] = [];
-
   autobots: Transformer[] = [
     new Transformer(
-      'BUMBLEBEE',
+      'bumblebee',
       TransformerType.Autobot,
       2,
       8,
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
       7
     ),
     new Transformer(
-      'RATCHET',
+      'ratchet',
       TransformerType.Autobot,
       4,
       8,
@@ -44,10 +44,10 @@ export class AppComponent implements OnInit {
       3,
       10
     ),
-    new Transformer('JAZZ', TransformerType.Autobot, 5, 9, 7, 7, 8, 9, 5, 10),
-    new Transformer('BLASTER', TransformerType.Autobot, 8, 8, 2, 8, 7, 9, 7, 9),
+    new Transformer('jazz', TransformerType.Autobot, 5, 9, 7, 7, 8, 9, 5, 10),
+    new Transformer('blaster', TransformerType.Autobot, 8, 8, 2, 8, 7, 9, 7, 9),
     new Transformer(
-      'FIREFLIGHT',
+      'fireflight',
       TransformerType.Autobot,
       7,
       5,
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
       3
     ),
     new Transformer(
-      'OPTIMUS PRIME',
+      'optimus prime',
       TransformerType.Autobot,
       10,
       10,
@@ -69,11 +69,11 @@ export class AppComponent implements OnInit {
       10,
       8,
       10
-    )
+    ),
   ];
   decepticons: Transformer[] = [
     new Transformer(
-      'MEGATRON',
+      'megatron',
       TransformerType.Desepticons,
       10,
       10,
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
       9
     ),
     new Transformer(
-      'RAMJET',
+      'ramjet',
       TransformerType.Desepticons,
       8,
       5,
@@ -97,7 +97,7 @@ export class AppComponent implements OnInit {
       6
     ),
     new Transformer(
-      'RAZORCLAW',
+      'razorclaw',
       TransformerType.Desepticons,
       8,
       9,
@@ -109,7 +109,7 @@ export class AppComponent implements OnInit {
       7
     ),
     new Transformer(
-      'SHOCKWAVE',
+      'shockwave',
       TransformerType.Desepticons,
       9,
       10,
@@ -121,7 +121,7 @@ export class AppComponent implements OnInit {
       9
     ),
     new Transformer(
-      'THUNDERCRACKER',
+      'thundercracker',
       TransformerType.Desepticons,
       7,
       7,
@@ -133,7 +133,7 @@ export class AppComponent implements OnInit {
       7
     ),
     new Transformer(
-      'MINDWIPE',
+      'mindwipe',
       TransformerType.Desepticons,
       8,
       6,
@@ -143,12 +143,17 @@ export class AppComponent implements OnInit {
       8,
       7,
       9
-    )
+    ),
   ];
-
 
   teamAutobot = [...this.autobots];
   teamDecepticons = [...this.decepticons];
+
+
+
+  constructor(private fb: FormBuilder) {
+
+  }
 
   ngOnInit(): void {}
 
@@ -216,7 +221,6 @@ export class AppComponent implements OnInit {
     this.teamDecepticons = [...this.decepticons];
 
     for (let i = 0; i < encounters; i++) {
-
       let courageous = this.courageSuperiority(
         this.autobots[i],
         this.decepticons[i]
@@ -231,12 +235,26 @@ export class AppComponent implements OnInit {
       );
 
       /*
-        In the event, either of the above face each other, or a duplicate of each other, the game
+        In the event, either of the above face each other (Optimus & Predaking), or a duplicate of each other (Optimus & Predaking), the game
         immediately ends with all competitors destroyed
       */
 
-      if (this.autobots[i].name.toLowerCase() === 'optimus prime' && this.decepticons[i].name.toLowerCase() === 'predaking') {
-
+      if (
+        (this.autobots[i].name.toLowerCase() === 'optimus prime' &&
+          this.decepticons[i].name.toLowerCase() === 'predaking') ||
+        this.autobots[i].name.toLowerCase() ===
+          this.decepticons[i].name.toLowerCase()
+      ) {
+        // kill everyone
+        this.battles = 0;
+        this.teamAutobot = [];
+        this.teamDecepticons = [];
+        this.results = {};
+        this.logger = [];
+        this.logger.push(
+          `There's no fight, nobody will win or they were fighting themselves. Battle canceled.`
+        );
+        return;
       }
 
       /*
@@ -246,18 +264,21 @@ export class AppComponent implements OnInit {
 
       if (this.autobots[i].name.toLowerCase() === 'optimus prime') {
         this.removeLooser(this.decepticons[i]);
-        this.logger.push(`It is ${this.autobots[i].name}, automatically wins, no matter what.`)
+        this.logger.push(
+          `It is ${this.autobots[i].name}, automatically wins, no matter what.`
+        );
         this.battles++;
         continue;
       }
 
       if (this.decepticons[i].name.toLowerCase() === 'predaking') {
         this.removeLooser(this.autobots[i]);
-        this.logger.push(`It is ${this.decepticons[i].name}, automatically wins, no matter what.`)
+        this.logger.push(
+          `It is ${this.decepticons[i].name}, automatically wins, no matter what.`
+        );
         this.battles++;
         continue;
       }
-
 
       /*
         If any fighter is down 4 or more points of courage and 3 or more points of strength
@@ -377,11 +398,18 @@ export class AppComponent implements OnInit {
     */
     this.results = {
       battles: this.battles,
-      winner: this.teamAutobot.length > this.teamDecepticons.length
-      ? TransformerType.Autobot
-      : TransformerType.Desepticons,
-      winners: this.teamAutobot.length > this.teamDecepticons.length ? this.autobots.map(x => x.name): this.decepticons.map(x => x.name),
-      survivors: this.teamAutobot.length < this.teamDecepticons.length ? this.autobots.map(x => x.name): this.decepticons.map(x => x.name),
+      winner:
+        this.teamAutobot.length > this.teamDecepticons.length
+          ? TransformerType.Autobot
+          : TransformerType.Desepticons,
+      winners:
+        this.teamAutobot.length > this.teamDecepticons.length
+          ? this.autobots.map((x) => x.name)
+          : this.decepticons.map((x) => x.name),
+      survivors:
+        this.teamAutobot.length < this.teamDecepticons.length
+          ? this.autobots.map((x) => x.name)
+          : this.decepticons.map((x) => x.name),
     };
   }
 }
